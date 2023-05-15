@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { auth } from "../Firebase"
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -20,17 +20,17 @@ const LoginScreen = () => {
   }, [])
 
   const handleSignUp = () => {
-    navigation.replace("Register")
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        console.log('Registered with:', user.email);
+      })
+      .catch(error => alert(error.message))
   }
 
   const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
-      })
-      .catch(error => alert(error.message))
+    navigation.replace("Login")
   }
 
   return (
@@ -38,10 +38,10 @@ const LoginScreen = () => {
       style={styles.container}
       behavior="padding"
     >
-    
-        <Image source={require('../assets/BeSmart.png')} style={styles.logo} />
-    
-
+     <Image
+        source={require('../assets/BeSmart.png')}
+        style={styles.logo}
+      /> 
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -59,32 +59,35 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+      
         <TouchableOpacity
           onPress={handleSignUp}
-
+          style={styles.button}
         >
-          <Text style={styles.buttonOutlineText}>New Worker? Create An Acount</Text>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
 
+
+        <TouchableOpacity
+          onPress={handleLogin}
+         
+        >
+          <Text style={styles.buttonOutlineText}>Already Have An Acount ?</Text>
+        </TouchableOpacity>
+        
       </View>
     </KeyboardAvoidingView>
   )
 }
 
-export default LoginScreen
+export default RegisterScreen
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#C7C6FF',
+    backgroundColor:'#C7C6FF',
   },
   inputContainer: {
     width: '80%'

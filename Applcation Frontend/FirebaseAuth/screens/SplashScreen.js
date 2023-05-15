@@ -14,13 +14,10 @@ const SplashScreen = () => {
       return (
         <View style={styles.container}>
           <Image
-            source={require('../assets/SplashScreen.jpg')}
+            source={require('../assets/splashScreen.jpg')}
             style={styles.image}
           />
-          <Image
-           source={require("../assets/BeSmart.png")}
-          style={{resizeMode:"cover"}} 
-           />
+          
         </View>
       );
     };
