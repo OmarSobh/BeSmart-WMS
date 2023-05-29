@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
       apiKey: "AIzaSyCsa-P2BURYxnbRxcqdbuAZ5nj_p9EXO0s",
@@ -22,5 +22,5 @@ if (firebase.apps.length === 0) {
 }
 
 const auth = firebase.auth()
-
-export { auth };
+const firestore = getFirestore(app);
+export { auth ,firestore};

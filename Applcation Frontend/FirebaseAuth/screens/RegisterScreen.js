@@ -1,18 +1,23 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth } from "../Firebase"
+import { auth, firestore } from "../Firebase"
+import 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
+
 
 const RegisterScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [birthday, setBirthday] = useState('');
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("Home")
+        navigation.replace("Home");
       }
     })
 
@@ -25,6 +30,13 @@ const RegisterScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Registered with:', user.email);
+        
+        setDoc(doc(firestore, 'users', user.uid), {
+          fullName: fullName,
+          email: email,
+          birthday: birthday,
+          // Add more fields as needed
+        });
       })
       .catch(error => alert(error.message))
   }
@@ -56,6 +68,18 @@ const RegisterScreen = () => {
           style={styles.input}
           secureTextEntry
         />
+         <TextInput
+        placeholder="Full Name"
+        value={fullName}
+        style={styles.input}
+        onChangeText={(text) => setFullName(text)}
+      />
+      <TextInput
+        placeholder="Birthday"
+        value={birthday}
+        style={styles.input}
+        onChangeText={(text) => setBirthday(text)}
+      />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -70,7 +94,6 @@ const RegisterScreen = () => {
 
         <TouchableOpacity
           onPress={handleLogin}
-         
         >
           <Text style={styles.buttonOutlineText}>Already Have An Acount ?</Text>
         </TouchableOpacity>
